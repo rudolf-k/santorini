@@ -86,7 +86,7 @@ export const useGameState = defineStore("gameState", () => {
   function updateBoard(updatedBoard: any) {
     for (let i = 0; i < updatedBoard.length; i++) {
       for (let j = 0; j < updatedBoard[i].length; j++) {
-        if (updatedBoard[i][j] < 4) {
+        if (updatedBoard[i][j] <= 4) {
           board.value[i][j] = "0" + updatedBoard[i][j].toString();
         } else {
           board.value[i][j] = updatedBoard[i][j].toString();
