@@ -54,6 +54,9 @@ function joinTeam(teamIndex: number, indexInTeam: number) {
 
 <style scoped lang="scss">
   .player-slot {
+    font-family: "League Spartan";
+    font-size: 22px;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
