@@ -118,7 +118,7 @@ function joinTeam(teamIndex: number, indexInTeam: number) {
     }
 
     .player-list {
-      margin-top: 25px;
+      margin-bottom: 25px;
     }
 }
   .button-container {
