@@ -20,7 +20,7 @@ import { RouterView } from "vue-router";
 
 <style scoped>
 * {
-  font-family: sans-serif;
+  font-family: "League Spartan";
   display: flex;
   justify-content: center;
 }

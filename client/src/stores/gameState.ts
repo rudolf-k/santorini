@@ -5,10 +5,9 @@ import { GameStage, type Coord, type Action, GameMode, adjacentList } from "@/Ut
 import { socket, state } from "@/socket";
 import { MiniMax } from "@/ai/minimax";
 import { MCTS } from "@/ai/mcts";
+// import { MCTS2 } from "@/ai/mcts2";
 
 export const useGameState = defineStore("gameState", () => {
-  // const backend_url = "http://127.0.0.1:5000";
-
   // 12 = player 1 on building 2
   // 03 = no player building 3
   // 30 = player 3 on building 0
@@ -47,6 +46,8 @@ export const useGameState = defineStore("gameState", () => {
           return "It's your turn to move.";
         case GameStage.Build:
           return "It's your turn to build.";
+        case GameStage.End:
+          return `${winner.value === 1 ? 'You' : "The AI"} won.`
       }
     }
   })
@@ -59,9 +60,8 @@ export const useGameState = defineStore("gameState", () => {
   const online = ref(false);
 
   const playerPawnCount = [0, 0, 0];
-  // let actionInProgress : Action | null = null;
 
-  const ai = [new MiniMax(5), new MCTS(80000, 1.41)];
+  const ai = [new MiniMax(5), new MCTS(40000, 1.41)];
 
   function initialiseOnlineGame(initData: any) {
     updateBoard(initData.board);
@@ -154,12 +154,6 @@ export const useGameState = defineStore("gameState", () => {
   
         gameStage.value = GameStage.Build;
   
-        // actionInProgress = {
-        //   fromCell: from,
-        //   moveToCell: to,
-        //   buildCell: null,
-        //   player: teamToPlay.value,
-        // };
         return true;
       }
     }
@@ -185,21 +179,21 @@ export const useGameState = defineStore("gameState", () => {
 
         if (gameMode === GameMode.Minimax || gameMode === GameMode.MCTS) {
           gameStage.value = GameStage.AiThinking;
-          if (applyAiAction(ai[gameMode].bestMove(board.value, teamToPlay.value)) === GameStage.End) {
-            gameStage.value = GameStage.End;
-            winner.value = teamToPlay.value;
-          } else {
-            nextPlayer();
-            gameStage.value = GameStage.Move;
-          }
+          const worker = new Worker(new URL("./aiActionWorker.ts", import.meta.url), {type: "module"});
+          worker.postMessage((JSON.stringify({gameMode: gameMode, board: board.value, playerToPlay: teamToPlay.value})));
+          worker.addEventListener("message", (result) => {
+            // console.log(result.data);
+            if (applyAiAction(result.data) === GameStage.End) {
+              gameStage.value = GameStage.End;
+              winner.value = teamToPlay.value;
+            } else {
+              nextPlayer();
+              gameStage.value = GameStage.Move;
+            }
+          })
         } else {
           gameStage.value = GameStage.Move;
         }
-
-        // if (actionInProgress) {
-        //   actionInProgress.buildCell = to;
-        //   // sendActionInProgress();
-        // }
         return true;
       }
     }
@@ -241,8 +235,18 @@ export const useGameState = defineStore("gameState", () => {
     return 0;
   }
 
+  // function aiAction(gameMode: GameMode) {
+  //   if (applyAiAction(ai[gameMode].bestMove(board.value, teamToPlay.value)) === GameStage.End) {
+  //     gameStage.value = GameStage.End;
+  //     winner.value = teamToPlay.value;
+  //   } else {
+  //     nextPlayer();
+  //     gameStage.value = GameStage.Move;
+  //   }
+  // }
+
   function applyAiAction(action: Action | null) {
-    console.log(`from [${action?.fromCell.y}, ${action?.fromCell.x}] to [${action?.moveToCell.y}, ${action?.moveToCell.x}], build: [${action?.buildCell?.y}, ${action?.buildCell?.x}]`);
+    // console.log(`from [${action?.fromCell.y}, ${action?.fromCell.x}] to [${action?.moveToCell.y}, ${action?.moveToCell.x}], build: [${action?.buildCell?.y}, ${action?.buildCell?.x}]`);
     if (action) {
       board.value[action.moveToCell.y][action.moveToCell.x] = (teamToPlay.value * 10 + parseInt(board.value[action.moveToCell.y][action.moveToCell.x])).toString();
       board.value[action.fromCell.y][action.fromCell.x] = "0" + (parseInt(board.value[action.fromCell.y][action.fromCell.x]) - teamToPlay.value * 10).toString();
@@ -258,41 +262,6 @@ export const useGameState = defineStore("gameState", () => {
     }
     return -1;
   }
-
-  // function execute_action(action : Action) {
-  //   board.value[action.fromCell.y][action.fromCell.x] = "0" + board.value[action.fromCell.y][action.fromCell.x][1];
-  //   board.value[action.moveToCell.y][action.moveToCell.x] =
-  //     teamToPlay.value.toString() + board.value[action.moveToCell.y][action.moveToCell.x][1];
-  //   if (action.buildCell) {
-  //     board.value[action.buildCell.y][action.buildCell.x] = `0${parseInt(board.value[action.buildCell.y][action.buildCell.x][1]) + 1}`;
-  //     nextPlayer();
-  //   }
-  // }
-
-  // function sendActionInProgress() {
-  //   const path = backend_url + "/action";
-  //   axios.post(path, {
-  //     action: actionInProgress,
-  //     }
-  //   )
-  //   .then(response => {
-  //     console.log(response);
-  //     if (response.data.action_done == 1) {
-  //       console.log(response.data.action)
-  //       let enemy_action : Action = {
-  //         fromCell: {x: response.data.action.from[1], y: response.data.action.from[0]},
-  //         moveToCell: {x: response.data.action.to[1], y: response.data.action.to[0]},
-  //         buildCell: {x: response.data.action.build[1], y: response.data.action.build[0]},
-  //         player: playerToPlay.value,
-  //       };
-  //       console.log(enemy_action)
-  //       execute_action(enemy_action);
-  //     }
-  //   })
-  //   .catch(err =>{
-  //     console.log(err);
-  //   });
-  // }
 
   return {
     board,

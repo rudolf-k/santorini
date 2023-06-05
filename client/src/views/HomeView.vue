@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 function aiGameLink() {
-  router.push("/game-options");
+  router.push("/ai-game");
 }
 
 function loginAsOwner() {
@@ -18,7 +18,7 @@ function loginAsOwner() {
   <div class="main-div">
     <h1>Santorini</h1>
     <div class="button-container">
-      <ButtonComponent :text="'Play against AI'" :action="aiGameLink"/>
+      <ButtonComponent :text="'Play against the AI'" :action="aiGameLink"/>
       <ButtonComponent :text="'Create multiplayer room'" :action="loginAsOwner"/>
       <!-- <ButtonComponent :text="'Join room'" :action="loginAsGuest"/> -->
     </div>
@@ -27,6 +27,9 @@ function loginAsOwner() {
 
 <style scoped lang="scss">
   .main-div {
+    font-family: "League Spartan";
+    font-size: 28px;
+
     margin: 0 auto;
     width: fit-content;
     

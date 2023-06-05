@@ -74,12 +74,21 @@ function onConfirm() {
 </template>
 
 <style scoped lang="scss">
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+$select-color: #5551ff;
+
 .main-div {
+  font-family: "League Spartan";
+  font-size: 18px;
+
   margin: 0 auto;
   width: fit-content;
   
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   justify-content: center;
 
   h1 {
@@ -99,17 +108,16 @@ function onConfirm() {
     padding: 0 6px;
     padding-left: 12px;
     &:focus{
-        border: 3px solid #5551ff;
+        border: 3px solid $select-color;
     }
   }
 
   .players-radio {
+    @include flex-column;
     margin: 18px 0px;
-    display: flex;
-    flex-direction: column;
     align-items: center;
 
-    $primary: #5551ff;
+    $primary: $select-color;
     $seconday: #9F9F9F;
     .l-radio {
       padding: 6px;

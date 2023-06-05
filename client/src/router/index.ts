@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import GameView from "@/views/GameView.vue";
+// import GameView from "@/views/GameView.vue";
 import HomeView from "@/views/HomeView.vue";
 import RoomView from "@/views/RoomView.vue";
 import LoginView from "@/views/LoginView.vue";
@@ -14,15 +14,15 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: "/game-options",
-      name: "options",
+      path: "/ai-game",
+      name: "ai",
       component: AiGameView,
     },
-    {
-      path: "/game",
-      name: "game",
-      component: GameView,
-    },
+    // {
+    //   path: "/game",
+    //   name: "game",
+    //   component: GameView,
+    // },
     {
       path: "/login/:roomToJoin",
       name: "login",

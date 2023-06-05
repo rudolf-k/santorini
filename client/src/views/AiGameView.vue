@@ -44,6 +44,9 @@ function startGame() {
 
 <style scoped lang="scss">
 .main-div {
+  font-family: "League Spartan";
+  font-size: 18px;
+
   margin: 0 auto;
   width: fit-content;
   

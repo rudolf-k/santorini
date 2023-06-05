@@ -14,14 +14,14 @@ app.use((req, resp)=> {
   resp.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-const io = new Server(server/*{
+const io = new Server(server, {
    cors: {
      origin: ["http://localhost:5173",  "http://127.0.0.1:5173"]
    }
 
-}*/);
+});
 
-var clients: any[] = [];
+// var clients: any[] = [];
 var rooms: any[] = [];
 
 io.use((client: any, next: any) => {
@@ -35,7 +35,7 @@ io.use((client: any, next: any) => {
 
 io.on("connection", (client: any) => {
     console.log(`${client.id} has connected (username: ${client.username}).`);
-    clients.push(client);
+    // clients.push(client);
     
     client.on("new-room", (playerCount: number) => {
       if ([2, 3, 4].includes(playerCount)) {
@@ -204,9 +204,9 @@ io.on("connection", (client: any) => {
 
     client.on("disconnect", () => {
       console.log(`${client.id} has disconnected (username: ${client.username}).`);
-      let i = clients.indexOf(client);
-      clients.splice(i, 1);
-      i = rooms.findIndex((r) => r.owner === client.id);
+      // let i = clients.indexOf(client);
+      // clients.splice(i, 1);
+      let i = rooms.findIndex((r) => r.owner === client.id);
       if (i != -1) {
         rooms.splice(i, 1);
         // TODO ?
