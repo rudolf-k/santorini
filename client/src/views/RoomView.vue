@@ -40,7 +40,7 @@ function joinTeam(teamIndex: number, indexInTeam: number) {
             <span v-if="player" >{{ player }}</span>
             <div v-else class="plus-icon-div" @click="joinTeam(i, j)">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M14 0H10V10H0V14H10V24H14V14H24V10H14V0Z" fill="black"/>
+                <path d="M9 6L15 12L9 18" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
           </div>
@@ -86,7 +86,7 @@ function joinTeam(teamIndex: number, indexInTeam: number) {
       &:hover svg {
         background-color: #159415;
         path {
-          fill: white;
+          stroke: white;
         }
       }
 
@@ -115,6 +115,10 @@ function joinTeam(teamIndex: number, indexInTeam: number) {
 
     h1 {
       text-align: center;
+    }
+
+    .player-list {
+      margin-top: 25px;
     }
 }
   .button-container {
