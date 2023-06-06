@@ -12,19 +12,23 @@ const props = defineProps({
 
 const emit = defineEmits(["dragStart", "dragEnd"]);
 
-function dragStart(e: any) {
-  const originalPos = e.target.getBoundingClientRect();
-  emit(
-    "dragStart",
-    e.target,
-    { y: props.coord.y, x: props.coord.x },
-    { x: originalPos.left, y: originalPos.top },
-    { x: e.clientX, y: e.clientY }
-  );
+function dragStart(e: PointerEvent) {
+  if (e.target && e.target instanceof HTMLElement) {
+    if (e.target.hasPointerCapture(e.pointerId)) {
+      e.target.releasePointerCapture(e.pointerId);
+    }
+    const originalPos = e.target.getBoundingClientRect();
+    emit(
+      "dragStart",
+      e.target,
+      { y: props.coord.y, x: props.coord.x },
+      { x: originalPos.left, y: originalPos.top },
+      { x: e.clientX, y: e.clientY }
+    );
+  }
 }
 
-function dragEnd(e: any) {
-  // console.log(props.coord);
+function dragEnd(e: PointerEvent) {
   emit("dragEnd", { y: props.coord.y, x: props.coord.x });
 }
 </script>
@@ -39,34 +43,19 @@ function dragEnd(e: any) {
       'building-3': props.content && props.content[1] === '3',
       'building-4': props.content && props.content[1] === '4',
     }"
-    @mouseup="dragEnd"
+    @pointerup="dragEnd"
   >
-    <!-- <p>{{ props.content }}</p> -->
-    <!-- <img
-      class="building"
-      v-if="props.content && props.content[1] !== '0'"
-      :src="`/assets/buildings/${props.content[1]}.png`"
-    /> -->
-
     <img
       class="pawn"
       v-if="props.content && props.content[0] !== '0'"
       :src="`/assets/players/${props.content[0]}.png`"
-      @mousedown="dragStart"
+      @pointerdown="dragStart"
       @dragstart.prevent=""
     />
   </div>
 </template>
 
 <style scoped>
-/*=================*/
-/* p {
-  position: absolute;
-  cursor: default;
-  margin: 0px;
-} */
-/*=================*/
-
 .cell {
   width: min(10vh, 10vw);
   height: min(10vh, 10vw);
@@ -76,6 +65,13 @@ function dragEnd(e: any) {
   border: 2px solid rgb(100, 100, 100);
 
   background-size: cover;
+}
+
+@media only screen and (orientation: portrait) {
+  .cell {
+    width: 15vw;
+    height: 15vw;
+  }
 }
 
 .cell > img {

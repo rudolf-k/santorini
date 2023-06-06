@@ -66,7 +66,7 @@ function dragStart(img: HTMLElement, cell: Coord, pos: Coord, mousePos: Coord) {
   }
 }
 
-function dragMove(e: any) {
+function dragMove(e: PointerEvent) {
   if (movingPiece.value) {
     const cellSize = Math.min(window.innerWidth, window.innerHeight) / 10;
     movingPiece.value.pieceHtml.style.left = `${e.clientX - cellSize / 2}px`;
@@ -102,7 +102,7 @@ function resetPiece() {
   }
 }
 
-window.addEventListener("mouseup", () => {
+window.addEventListener("pointerup", () => {
   if (movingPiece.value && movingPiece.value.destinationCell == null) {
     resetPiece();
     movingPiece.value = null;
@@ -112,7 +112,7 @@ window.addEventListener("mouseup", () => {
 
 <template>
   <div class="board-component">
-    <div id="board" @mousemove="dragMove">
+    <div id="board" @pointermove="dragMove">
       <Cell
         v-for="c in gameState.boardAsList"
         :key="`${c.y}_${c.x}`"
@@ -129,8 +129,17 @@ window.addEventListener("mouseup", () => {
 
 <style>
 #board {
+  margin-top: 5vh;
+
   display: grid;
   grid-template-columns: repeat(5, min(10vh, 10vw));
   grid-template-rows: repeat(5, min(10vh, 10vw));
+}
+
+@media only screen and (orientation: portrait) {
+  #board {
+    grid-template-columns: repeat(5, 15vw);
+    grid-template-rows: repeat(5, 15vw);
+  }
 }
 </style>

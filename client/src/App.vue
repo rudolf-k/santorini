@@ -18,10 +18,20 @@ import { RouterView } from "vue-router";
   </div>
 </template>
 
-<style scoped>
-* {
+<style>
+body {
   font-family: "League Spartan";
   display: flex;
   justify-content: center;
 }
+
+
+
+html, body {
+  overflow: hidden;
+}
+body {
+  position: relative;
+}
+
 </style>
