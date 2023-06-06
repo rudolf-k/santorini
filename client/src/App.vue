@@ -23,9 +23,9 @@ body {
   font-family: "League Spartan";
   display: flex;
   justify-content: center;
+
+  overscroll-behavior: contain
 }
-
-
 
 html, body {
   overflow: hidden;
