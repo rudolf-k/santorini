@@ -24,7 +24,7 @@ body {
   display: flex;
   justify-content: center;
 
-  overscroll-behavior: contain
+  overscroll-behavior: contain;
 }
 
 html, body {

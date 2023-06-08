@@ -190,7 +190,7 @@ export const useGameState = defineStore("gameState", () => {
               nextPlayer();
               gameStage.value = GameStage.Move;
             }
-          })
+          });
         } else {
           gameStage.value = GameStage.Move;
         }

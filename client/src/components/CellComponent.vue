@@ -12,11 +12,8 @@ const props = defineProps({
 
 const emit = defineEmits(["dragStart", "dragEnd"]);
 
-function dragStart(e: PointerEvent) {
+function dragStart(e: MouseEvent) {
   if (e.target && e.target instanceof HTMLElement) {
-    if (e.target.hasPointerCapture(e.pointerId)) {
-      e.target.releasePointerCapture(e.pointerId);
-    }
     const originalPos = e.target.getBoundingClientRect();
     emit(
       "dragStart",
@@ -28,7 +25,7 @@ function dragStart(e: PointerEvent) {
   }
 }
 
-function dragEnd(e: PointerEvent) {
+function dragEnd(e: MouseEvent) {
   emit("dragEnd", { y: props.coord.y, x: props.coord.x });
 }
 </script>
@@ -43,13 +40,13 @@ function dragEnd(e: PointerEvent) {
       'building-3': props.content && props.content[1] === '3',
       'building-4': props.content && props.content[1] === '4',
     }"
-    @pointerup="dragEnd"
+    @mouseup="dragEnd"
   >
     <img
       class="pawn"
       v-if="props.content && props.content[0] !== '0'"
       :src="`/assets/players/${props.content[0]}.png`"
-      @pointerdown="dragStart"
+      @mousedown="dragStart"
       @dragstart.prevent=""
     />
   </div>

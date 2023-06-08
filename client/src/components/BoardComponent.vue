@@ -66,7 +66,7 @@ function dragStart(img: HTMLElement, cell: Coord, pos: Coord, mousePos: Coord) {
   }
 }
 
-function dragMove(e: PointerEvent) {
+function dragMove(e: MouseEvent) {
   if (movingPiece.value) {
     const cellSize = Math.min(window.innerWidth, window.innerHeight) / 10;
     movingPiece.value.pieceHtml.style.left = `${e.clientX - cellSize / 2}px`;
@@ -102,7 +102,7 @@ function resetPiece() {
   }
 }
 
-window.addEventListener("pointerup", () => {
+window.addEventListener("mouseup", () => {
   if (movingPiece.value && movingPiece.value.destinationCell == null) {
     resetPiece();
     movingPiece.value = null;
@@ -112,7 +112,7 @@ window.addEventListener("pointerup", () => {
 
 <template>
   <div class="board-component">
-    <div id="board" @pointermove="dragMove">
+    <div id="board" @mousemove="dragMove">
       <Cell
         v-for="c in gameState.boardAsList"
         :key="`${c.y}_${c.x}`"
