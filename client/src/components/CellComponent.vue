@@ -13,14 +13,15 @@ const props = defineProps({
 const emit = defineEmits(["dragStart", "dragEnd"]);
 
 function dragStart(e: MouseEvent) {
-  if (e.target && e.target instanceof HTMLElement) {
-    const originalPos = e.target.getBoundingClientRect();
+  if (e.target && e.target instanceof HTMLElement && e.target.parentElement) {
+    const originalPos = e.target.parentElement.getBoundingClientRect();
     emit(
       "dragStart",
       e.target,
       { y: props.coord.y, x: props.coord.x },
       { x: originalPos.left, y: originalPos.top },
-      { x: e.clientX, y: e.clientY }
+      { x: e.clientX, y: e.clientY },
+      originalPos.width
     );
   }
 }
@@ -59,7 +60,8 @@ function dragEnd(e: MouseEvent) {
 
   /* background-color: rgb(240, 236, 225); */
   background-color: rgb(202, 255, 198);
-  border: 2px solid rgb(100, 100, 100);
+  border: 1px solid rgb(100, 100, 100);
+  box-sizing: border-box;
 
   background-size: cover;
 }
@@ -72,8 +74,7 @@ function dragEnd(e: MouseEvent) {
 }
 
 .cell > img {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
 }
 
 .building-1 {

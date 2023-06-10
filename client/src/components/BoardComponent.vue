@@ -40,7 +40,7 @@ function onCellClick(row: number, col: number) {
   }
 }
 
-function dragStart(img: HTMLElement, cell: Coord, pos: Coord, mousePos: Coord) {
+function dragStart(img: HTMLElement, cell: Coord, pos: Coord, mousePos: Coord, cellSize: number) {
   if (gameState.gameStage === GameStage.End) {
     return;
   }
@@ -55,11 +55,10 @@ function dragStart(img: HTMLElement, cell: Coord, pos: Coord, mousePos: Coord) {
       originalPos: pos,
       destinationCell: null,
     };
-
-    const cellSize = Math.min(window.innerWidth, window.innerHeight) / 10;
+    
     movingPiece.value.pieceHtml.style.left = `${mousePos.x - cellSize / 2}px`;
     movingPiece.value.pieceHtml.style.top = `${mousePos.y - cellSize / 2}px`;
-    movingPiece.value.pieceHtml.style.position = "absolute";
+    movingPiece.value.pieceHtml.style.position = "fixed";
     movingPiece.value.pieceHtml.style.width = `${cellSize}px`;
     movingPiece.value.pieceHtml.style.height = `${cellSize}px`;
     movingPiece.value.pieceHtml.style.pointerEvents = "none";
@@ -134,6 +133,8 @@ window.addEventListener("mouseup", () => {
   display: grid;
   grid-template-columns: repeat(5, min(10vh, 10vw));
   grid-template-rows: repeat(5, min(10vh, 10vw));
+
+  border: 1px solid rgb(100, 100, 100);
 }
 
 @media only screen and (orientation: portrait) {
