@@ -12,6 +12,10 @@ function aiGameLink() {
 function loginAsOwner() {
   router.push({name: "login", params: { roomToJoin: EnteringRoom.AsOwner }});
 }
+
+function rulesLink() {
+  router.push("/rules");
+}
 </script>
 
 <template>
@@ -20,7 +24,8 @@ function loginAsOwner() {
     <div class="button-container">
       <ButtonComponent :text="'Play against the AI'" :action="aiGameLink"/>
       <ButtonComponent :text="'Create multiplayer room'" :action="loginAsOwner"/>
-      <!-- <ButtonComponent :text="'Join room'" :action="loginAsGuest"/> -->
+      
+      <span href="/rules" @click="rulesLink">How to play?</span>
     </div>
   </div>
 </template>
@@ -44,5 +49,27 @@ function loginAsOwner() {
   .button-container {
     display: flex;
     flex-direction: column;
+    
+    .menu-button {
+      width: 100%;
+    }
+    align-items: center;
+    text-align: center;
+    span {
+      width: fit-content;
+      padding: 0px 15px 0px 15px;
+      margin-top: 15px;
+      color: cornflowerblue;
+      font-size: 24px;
+      text-decoration: none;
+
+      &:hover {
+        border-radius: 15px;
+        background-color: cornflowerblue;
+        color: white;
+
+        cursor: pointer;
+      }
+    }
   }
 </style>

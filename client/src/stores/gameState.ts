@@ -133,6 +133,7 @@ export const useGameState = defineStore("gameState", () => {
 
   function makeMove(from: Coord, to: Coord, gameMode: number = 10) {
     if (
+      gameStage.value === GameStage.Move &&
       board.value[from.y][from.x][0] === teamToPlay.value.toString() &&
       board.value[to.y][to.x][0] === "0" && parseInt(board.value[to.y][to.x][1]) < 4 &&
       Math.abs(from.x - to.x) <= 1 &&
@@ -162,6 +163,7 @@ export const useGameState = defineStore("gameState", () => {
 
   function build(to: Coord, from: Coord, gameMode: number = 10) {
     if (
+      gameStage.value === GameStage.Build &&
       board.value[to.y][to.x][0] === "0" &&
       parseInt(board.value[to.y][to.x][1]) < 4 &&
       Math.abs(from.x - to.x) <= 1 &&
@@ -175,24 +177,28 @@ export const useGameState = defineStore("gameState", () => {
         }
       } else {
         board.value[to.y][to.x] = `0${parseInt(board.value[to.y][to.x][1]) + 1}`;
-        nextPlayer();
-
-        if (gameMode === GameMode.Minimax || gameMode === GameMode.MCTS) {
-          gameStage.value = GameStage.AiThinking;
-          const worker = new Worker(new URL("./aiActionWorker.ts", import.meta.url), {type: "module"});
-          worker.postMessage((JSON.stringify({gameMode: gameMode, board: board.value, playerToPlay: teamToPlay.value})));
-          worker.addEventListener("message", (result) => {
-            // console.log(result.data);
-            if (applyAiAction(result.data) === GameStage.End) {
-              gameStage.value = GameStage.End;
-              winner.value = teamToPlay.value;
-            } else {
-              nextPlayer();
-              gameStage.value = GameStage.Move;
-            }
-          });
+        if (gameEndAiGame({fromCell: {x: -1, y: -1}, moveToCell: from, buildCell: to, player: teamToPlay.value})) {
+          gameStage.value = GameStage.End;
+          winner.value = teamToPlay.value;
         } else {
-          gameStage.value = GameStage.Move;
+          nextPlayer();
+          if (gameMode === GameMode.Minimax || gameMode === GameMode.MCTS) {
+            gameStage.value = GameStage.AiThinking;
+            const worker = new Worker(new URL("./aiActionWorker.ts", import.meta.url), {type: "module"});
+            worker.postMessage((JSON.stringify({gameMode: gameMode, board: board.value, playerToPlay: teamToPlay.value})));
+            worker.addEventListener("message", (result) => {
+              // console.log(result.data);
+              if (applyAiAction(result.data) === GameStage.End) {
+                gameStage.value = GameStage.End;
+                winner.value = teamToPlay.value;
+              } else {
+                nextPlayer();
+                gameStage.value = GameStage.Move;
+              }
+            });
+          } else {
+            gameStage.value = GameStage.Move;
+          }
         }
         return true;
       }
@@ -226,13 +232,14 @@ export const useGameState = defineStore("gameState", () => {
     return true;
   }
 
-  function gameEnd(action: Action | null) {
+  function gameEndAiGame(action: Action | null) {
     if (action) {
-      if (board.value[action.moveToCell.y][action.moveToCell.x][1] === '3' || noMoves(teamToPlay.value)) {
-        return 1;
+      const otherPlayer = teamToPlay.value === 2 ? 1 : 2;
+      if (board.value[action.moveToCell.y][action.moveToCell.x][1] === '3' || noMoves(otherPlayer)) {
+        return true;
       }
     }
-    return 0;
+    return false;
   }
 
   // function aiAction(gameMode: GameMode) {
@@ -257,7 +264,7 @@ export const useGameState = defineStore("gameState", () => {
       console.log("AI error: action is null");
     }
 
-    if (gameEnd(action)) {
+    if (gameEndAiGame(action)) {
       return GameStage.End;
     }
     return -1;
