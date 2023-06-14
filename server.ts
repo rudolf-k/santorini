@@ -83,9 +83,8 @@ io.on("connection", (client: any) => {
           const teamListToSend = rooms[roomIndex].teams.map((t: any) => t.map((p: any) => (p !== null ? p.username : null)));
           io.to(roomId).emit("room-players-update", teamListToSend);
         } else {
-          /////////
+          client.emit("room-full", roomId);
           console.log("Room full: " + roomId);
-          /////////
         }
       } else {
         client.emit("room-not-found", roomId);
@@ -139,13 +138,6 @@ io.on("connection", (client: any) => {
 
         const teamList = rooms[roomIndex].teams.map((t: any) => { return t.map((p: any) => (p !== null ? {username: p.username, id: p.id} : null)) });
         rooms[roomIndex].game = new Game(teamList);
-        // const initUpdate = {
-        //   board: rooms[roomIndex].game.board,
-        //   playerCount: rooms[roomIndex].game.playerCount,
-        //   teamToPlay: rooms[roomIndex].game.teamToPlay,
-        //   gameStage: rooms[roomIndex].game.gameStage,
-        //   teams: teamList,
-        // };
         io.to(roomId).emit("game-started", rooms[roomIndex].game.getInitialState());
         console.log(`Game started for room: ${roomId}.`);
       } else {
@@ -159,14 +151,6 @@ io.on("connection", (client: any) => {
       const roomIndex = rooms.findIndex((r) => r.owner === client.roomJoined);
       if (roomIndex !== -1) {
         if (rooms[roomIndex].game.spawn(cell, client.id)) {
-          // const teamList = rooms[roomIndex].teams.map((t: any) => { return { players: t.map((p: any) => (p !== null ? {username: p.username, id: p.id} : null)), playerToPlay: 0 }; });
-          // const update = {
-          //   board: rooms[roomIndex].game.board,
-          //   playerCount: rooms[roomIndex].game.playerCount,
-          //   playerToPlay: rooms[roomIndex].game.teamToPlay,
-          //   gameStage: rooms[roomIndex].game.gameStage,
-          //   teams: teamList,
-          // };
           io.to(client.roomJoined).emit("game-update", rooms[roomIndex].game.getGameState());
         } else {
           console.log(`User ${client.id} tried to spawn - INVALID.`)
@@ -204,13 +188,9 @@ io.on("connection", (client: any) => {
 
     client.on("disconnect", () => {
       console.log(`${client.id} has disconnected (username: ${client.username}).`);
-      // let i = clients.indexOf(client);
-      // clients.splice(i, 1);
       let i = rooms.findIndex((r) => r.owner === client.id);
-      if (i != -1) {
+      if (i != -1) {  // owner leaves room
         rooms.splice(i, 1);
-        // TODO ?
-        // handle disconnect from room
         return;
       }
       const roomIndex = rooms.findIndex((r) => r.owner === client.roomJoined);

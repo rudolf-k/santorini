@@ -64,7 +64,3 @@ export function boardStringToInt(board: string[][]) {
   }
   return newBoard;
 }
-
-// export function boardIntToString(board: number[][]) {
-  
-// }

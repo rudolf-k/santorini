@@ -7,7 +7,6 @@ export const state = reactive({
     roomId: undefined,
     playerCount: null,
     teams: [],
-    // players: [],
     gameStarted: false,
     gameState: null,
     initData: null,
@@ -35,19 +34,18 @@ socket.on("room-not-found", (roomId) => {
   console.log("Room " + roomId + " not found on server.");
 });
 
+socket.on("room-full", (roomId) => {
+  console.log("Room " + roomId + " is full.");
+});
+
 socket.on("room-players-update", (teamList) => {
-  // state.room.players = playerList;
   state.room.teams = teamList;
 })
 
 socket.on("new-room-created", (roomId, teamList, playerCount/*, username*/) => {
   state.room.roomId = roomId;
   state.room.playerCount = playerCount;
-  // const teamSize = (state.room.playerCount === 4 ? 2 : 1);
-  // state.room.provisionalTeams = Array((state.room.playerCount === 3 ? 3 : 2)).fill(undefined).map(() => Array(teamSize).fill(null));
-  // state.room.provisionalTeams[0][0] = { id: socket.id, username: username }
   state.room.teams = teamList;
-  // state.room.players = playerList;
 });
 
 socket.on("room-joined", (roomId) => {

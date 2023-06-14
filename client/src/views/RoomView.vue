@@ -19,7 +19,6 @@ if (!socket.connected) {
 }
 
 function startGame() {
-  // TODO: include teams
   socket.emit("start-game", state.room.roomId);
 }
 
