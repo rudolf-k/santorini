@@ -63,7 +63,7 @@ function joinTeam(teamIndex: number, indexInTeam: number) {
 
     margin-bottom: 10px;
     height: 38px;
-    width: 60%;
+    width: 250px;
     border: 2px solid black;
     border-radius: 20px;
     padding: 10px;
@@ -111,6 +111,11 @@ function joinTeam(teamIndex: number, indexInTeam: number) {
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    .start-div {
+      display: flex;
+      flex-direction: column;
+    }
 
     h1 {
       text-align: center;
