@@ -19,11 +19,6 @@ const router = createRouter({
       name: "ai",
       component: AiGameView,
     },
-    // {
-    //   path: "/game",
-    //   name: "game",
-    //   component: GameView,
-    // },
     {
       path: "/login/:roomToJoin",
       name: "login",

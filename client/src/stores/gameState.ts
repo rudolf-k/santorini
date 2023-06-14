@@ -5,7 +5,6 @@ import { GameStage, type Coord, type Action, GameMode, adjacentList } from "@/Ut
 import { socket, state } from "@/socket";
 import { MiniMax } from "@/ai/minimax";
 import { MCTS } from "@/ai/mcts";
-// import { MCTS2 } from "@/ai/mcts2";
 
 export const useGameState = defineStore("gameState", () => {
   // 12 = player 1 on building 2
