@@ -7,7 +7,14 @@ The 2 AI implementations are:
 - Monte Carlo Tree Search
 
 
+![multi_gameplay](https://github.com/user-attachments/assets/fb455ffd-7f14-41d6-9bf4-a3677ce1a44f)
+
+
+
 There is an explanation of the rules and the gameplay on the homescreen of the app.
+
+
+![homepage_smaller](https://github.com/user-attachments/assets/534583da-d216-4a2c-9439-6eb9226f677f)
 
 
 The app used to be hosted but it is no longer available. Users can run it locally.
